@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../common/Common.js"></script>
+<script type="text/javascript" src='../../js/jquery.form.js'></script>
+</head>
+<body>
+<div style="padding:50px 50px">
+<form id="uploadForm" action="" enctype="multipart/form-data" method="post">
+	<!-- <input class="easyui-textbox" type="text" name="deployName" data-options="required:true"></input>
+	<input type="file" name="file"/>
+	<input type="button" value="部署" onclick="upload()"></input> -->
+	<table cellpadding="2" align="center">
+   		<!-- <tr>
+   			<td>部署名称:</td>
+   			<td><input class="easyui-textbox" type="text" name="deployName" data-options="required:true"></input></td>
+   		</tr> -->
+   		<tr>
+   			<td colspan="2"><input type="file" name="file"/></td>
+   		</tr>
+   		<tr>
+   			<td colspan="2"><label style="color: red;">请上传流程定义文件zip包，需包含*.bpmn、*.png两个文件</label></td>
+   		</tr>
+   		<tr>
+   			<td colspan="2" align="left"><input type="button" value="部署" onclick="upload()"></input></td>
+   		</tr>
+   	</table>
+</form>
+</div>
+<script type="text/javascript">
+	function upload(){
+		 //$('#uploadForm').attr("action", App.baseURL+"/workflow/deploy").submit();
+		 /* var options = { 
+	        url: App.baseURL+"/workflow/deploy",
+	        success: function(responseText, statusText, xhr, $form){
+	        	console.log(responseText);
+	        	debugger;
+	        },
+	        type: "post"
+	        //dataType:"json"
+	    }; 
+	    $('#uploadForm').ajaxForm(options); */
+    
+		 var options  = {      
+             url:App.baseURL+"/workflow/deploy",      
+             type:'post',      
+             success:function(data){    
+            	 if(0==data.code){
+            		 $.messager.show({
+							title:'提示',
+							msg:'流程部署成功.',
+							showType:'fade',
+							timeout:3000,
+							style:{
+								right:'',
+								top:document.body.scrollTop+document.documentElement.scrollTop,
+								bottom:''
+							}
+						});
+            		//关闭dialog
+		     		$("#deployWin").dialog("close");
+            	 	//部署成功，刷新列表
+            	 	$("#deploymentDataGrid").datagrid("reload");
+            	 }else{
+            		//返回码不是0，显示失败原因
+			     	$.messager.alert("错误",data.msg,"error");
+            	 }
+             }      
+         };      
+		 $('#uploadForm').ajaxSubmit(options);   
+	}
+</script>
+</body>
+</html>

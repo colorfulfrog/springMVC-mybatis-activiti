@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>addUser</title>
+</head>
+<body>
+	<!-- <div class="easyui-panel" title="New Topic" style="width:400px"> -->
+		<div style="padding:10px 60px 20px 60px">
+	    <form id="addUserForm" class="easyui-form" method="post" data-options="novalidate:true">
+	    	<table cellpadding="5">
+	    		<tr>
+	    			<td>ID:</td>
+	    			<td><input class="easyui-textbox" type="text" name="userId" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>用户名:</td>
+	    			<td><input class="easyui-textbox" type="text" name="userName" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>生日:</td>
+	    			<td><input class="easyui-datebox" type="text" name="userBirthday" data-options="required:true,formatter:myformatter,parser:myparser"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>薪资:</td>
+	    			<td><input class="easyui-textbox" name="userSalary" data-options="multiline:true" style="height:60px"></input></td>
+	    		</tr>
+	    	</table>
+	    </form>
+	    <div style="text-align:center;padding:5px">
+	    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="addUser()">提交</a>
+	    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
+	    </div>
+	    </div>
+	<!-- </div> -->
+	<script type="text/javascript">
+		function addUser(){
+			//表单验证
+			var validate = $("#addUserForm").form('enableValidation').form('validate');
+			if(validate){ // 表单验证成功，则发送请求至后台
+				$.ajax({
+				   type: "POST",
+				   url: App.baseURL+"/user/add", 
+				   data: getFormJson("addUserForm"), // 获取表单数据并转为json
+				   contentType:"application/json",
+				   dataType:"json",
+				   success:function(data,status){ // 操作成功回调函数
+				     	if(0==data.code){
+				     		// 操作成功提示框，3秒后自动消失
+					     	$.messager.show({
+								title:'提示',
+								msg:'添加用户成功.',
+								showType:'fade',
+								timeout:3000,
+								style:{
+									right:'',
+									top:document.body.scrollTop+document.documentElement.scrollTop,
+									bottom:''
+								}
+							});
+				     		//关闭dialog
+				     		$("#addUserWin").dialog("close");
+				     		// 刷新列表
+				     		$("#dataGrid").datagrid("reload");
+				     	}else{
+				     		//返回码不是0，显示失败原因
+				     		$.messager.alert("错误",data.msg,"error");
+				     	}
+				   },
+				   error:function(){
+					   $.messager.alert("错误","请求失败！","error");
+				   }
+				});
+			}
+		};
+		
+		//重置表单
+		function clearForm() {
+			$('#addUserForm').form('clear');
+		};
+	</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../common/Common.js"></script>
+</head>
+<body>
+<form id="uploadForm" action="" enctype="multipart/form-data" method="post">
+	<input type="file" name="file"/>
+	<input type="button" name="上传" value="上传" onclick="upload()"></input>
+</form>
+<script type="text/javascript">
+	function upload(){
+		debugger;
+		 //http://localhost:8080/elead-oa/upload
+		 $('#uploadForm').attr("action", App.baseURL+"/upload").submit();
+	}
+</script>
+</body>
+</html>
